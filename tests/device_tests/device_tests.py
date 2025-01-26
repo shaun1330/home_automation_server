@@ -3,6 +3,8 @@ from freezegun import freeze_time
 from internet_of_things.models import Device, DeviceLog
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from django.shortcuts import reverse
+from pathlib import Path
 
 
 @pytest.fixture()
@@ -16,8 +18,8 @@ def create_devices(db):
         d.delete()
 
 
-def test_get_devices(client, create_devices):
-    response = client.get('/api/devices/')
+def test_get_devices(api_client, create_devices):
+    response = api_client.get('/api/devices/')
     assert response.status_code == 200
     expected = [
         {'id': 1, 'name': 'Test 0'},
@@ -28,8 +30,8 @@ def test_get_devices(client, create_devices):
     assert data == expected
 
 
-def test_get_device(client, create_devices):
-    response = client.get('/api/devices/1')
+def test_get_device(api_client, create_devices):
+    response = api_client.get('/api/devices/1')
     assert response.status_code == 200
     expected = {'id': 1, 'name': 'Test 0'}
     data = response.json()
@@ -37,14 +39,14 @@ def test_get_device(client, create_devices):
 
 
 @freeze_time('2025-01-01 00:00:00+11:00')
-def test_post_device_log(client, create_devices):
+def test_post_device_log(api_client, create_devices):
     payload = {
         "temperature": 2.92,
         "voltage": 0.23,
         "location": "TEST",
         "foo": "bar"
     }
-    response = client.post('/api/devices/log/1', data=payload)
+    response = api_client.post('/api/devices/log/1', data=payload)
     assert response.status_code == 201
     expected = {'device': 1,
                 'id': 1,
@@ -95,12 +97,42 @@ def create_device_logs(create_devices):
     ('2025-03-01', None, expected_device_logs[3:]),
     (None, '2025-03-01', expected_device_logs[:3]),
 ])
-def test_get_device_logs_all(client, create_device_logs, start_date, end_date, expected):
+def test_get_device_logs_all(api_client, create_device_logs, start_date, end_date, expected):
     url = '/api/devices/log/1?'
     if start_date:
         url += f'start_date={start_date}&'
     if end_date:
         url += f'end_date={end_date}'
-    response = client.get(url)
+    response = api_client.get(url)
     data = response.json()
     assert data == expected
+
+
+#################### HTML render tests ####################
+
+def load_expected_html(filename):
+    base_dir = Path(__file__).parent / "expected_htmls"
+    file_path = base_dir / filename
+    with file_path.open("r", encoding="utf-8") as file:
+        return file.read()
+
+def save_expected_output(filename, content):
+    base_dir = Path(__file__).parent / "expected_htmls"
+    file_path = base_dir / filename
+    with file_path.open("w", encoding="utf-8") as file:
+        file.write(content)
+
+def test_devices_list(client, create_devices):
+    url = reverse("iot:devices_list")
+    response = client.get(url, HTTP_HX_REQUEST="true")
+    assert response.status_code == 200
+    # save_expected_output('devices_list.html', response.content.decode().strip())
+    expected = load_expected_html('devices_list.html')
+    assert response.content.decode().strip() == expected.strip()
+
+def test_devices_list_no_devices(client, db):
+    url = reverse("iot:devices_list")
+    response = client.get(url, HTTP_HX_REQUEST="true")
+    assert response.status_code == 200
+    expected = load_expected_html('devices_list_no_devices.html')
+    assert response.content.decode().strip() == expected.strip()

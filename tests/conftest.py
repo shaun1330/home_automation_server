@@ -3,9 +3,14 @@ import pytest
 
 
 @pytest.fixture
-def client():
+def api_client():
     from rest_framework.test import APIClient
     return APIClient()
+
+@pytest.fixture()
+def client():
+    from django.test import Client
+    return Client()
 
 
 @pytest.fixture
