@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Device Details{% endblock %}
+
+
+{% block content %}
+
+    <h2>Device:{{ device.name }} </h2>
+    <div><b>Location</b><p>{{ device.location }}</p></div>
+    <div><b>Device Type</b><p>{{ device.device_type }}</p></div>
+
+{% endblock %}

@@ -22,9 +22,9 @@ def test_get_devices(api_client, create_devices):
     response = api_client.get('/api/devices/')
     assert response.status_code == 200
     expected = [
-        {'id': 1, 'name': 'Test 0'},
-        {'id': 2, 'name': 'Test 1'},
-        {'id': 3, 'name': 'Test 2'}
+        {'device_type': None, 'id': 1, 'location': None, 'name': 'Test 0', 'tags': []},
+        {'device_type': None, 'id': 2, 'location': None, 'name': 'Test 1', 'tags': []},
+        {'device_type': None, 'id': 3, 'location': None, 'name': 'Test 2', 'tags': []}
     ]
     data = response.json()
     assert data == expected
@@ -33,7 +33,7 @@ def test_get_devices(api_client, create_devices):
 def test_get_device(api_client, create_devices):
     response = api_client.get('/api/devices/1')
     assert response.status_code == 200
-    expected = {'id': 1, 'name': 'Test 0'}
+    expected = {'device_type': None, 'id': 1, 'location': None, 'name': 'Test 0', 'tags': []}
     data = response.json()
     assert data == expected
 
@@ -126,7 +126,7 @@ def test_devices_list(client, create_devices):
     url = reverse("iot:devices_list")
     response = client.get(url, HTTP_HX_REQUEST="true")
     assert response.status_code == 200
-    # save_expected_output('devices_list.html', response.content.decode().strip())
+    #save_expected_output('devices_list.html', response.content.decode().strip())
     expected = load_expected_html('devices_list.html')
     assert response.content.decode().strip() == expected.strip()
 
@@ -134,5 +134,14 @@ def test_devices_list_no_devices(client, db):
     url = reverse("iot:devices_list")
     response = client.get(url, HTTP_HX_REQUEST="true")
     assert response.status_code == 200
+    #save_expected_output('devices_list_no_devices.html', response.content.decode().strip())
     expected = load_expected_html('devices_list_no_devices.html')
+    assert response.content.decode().strip() == expected.strip()
+
+def test_device_details(client, db, create_devices):
+    url = reverse("iot:device_detail", args=[1])
+    response = client.get(url)
+    assert response.status_code == 200
+    save_expected_output('device_details.html', response.content.decode().strip())
+    expected = load_expected_html('device_details.html')
     assert response.content.decode().strip() == expected.strip()

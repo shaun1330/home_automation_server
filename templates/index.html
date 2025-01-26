@@ -3,8 +3,12 @@
 {% block title %}Home Server{% endblock %}
 
 {% block content %}
-    <h1>Home Server</h1>
-    <div hx-get="{% url 'iot:devices_list' %}" hx-swap="innerHTML" hx-trigger="load">
-        Getting Devices....
+    <div class="row">
+        <div class="col-6">
+            <div hx-get="{% url 'iot:devices_list' %}" hx-swap="innerHTML" hx-trigger="load">
+                Getting Devices....
+            </div>
+        </div>
+        <div class="col-6"></div>
     </div>
 {% endblock %}

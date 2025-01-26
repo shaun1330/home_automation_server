@@ -1,13 +1,17 @@
-<table>
+<table class="table">
     <thead>
     <tr>
         <th>Name</th>
+        <th>Location</th>
+        <th>Device Type</th>
     </tr>
     </thead>
     <tbody>
     {% for device in devices %}
-        <tr>
+        <tr onclick="window.location.href='/devices/{{ device.id }}'" style="cursor: pointer;">
             <td>{{ device.name }}</td>
+            <td>{{ device.location|default:"-" }}</td>
+            <td>{{ device.device_type|default:"-" }}</td>
         </tr>
     {% endfor %}
     </tbody>
