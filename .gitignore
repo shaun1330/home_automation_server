@@ -3,3 +3,5 @@
 *__pycache__/
 *.sqlite3
 .coverage
+config.ini
+*/local_settings.py
