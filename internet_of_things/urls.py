@@ -1,8 +1,9 @@
 from django.urls import path
 from internet_of_things import views
 
+
 urlpatterns = [
-    path('', views.get_devices),
-    path('<int:device_id>', views.get_device),
-    path('log/<int:device_id>', views.DeviceLogView.as_view()),
+    path('', views.devices_list, name='devices_list'),  # Render a list of devices
+    path('create/', views.create_device, name='create_device'),  # HTMX form for creating a device
+    path('<int:device_id>/', views.device_detail, name='device_detail'),  # Device detail view
 ]

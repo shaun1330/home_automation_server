@@ -7,19 +7,19 @@ from internet_of_things.serializer import DeviceSerializer, DeviceLogSerializer
 
 
 @api_view(['GET'])
-def get_devices(request):
+def api_get_devices(request):
     devices = Device.objects.all()
     serializer = DeviceSerializer(devices, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
-def get_device(request, device_id: int):
+def api_get_device(request, device_id: int):
     device = Device.objects.get(id=device_id)
     serializer = DeviceSerializer(device, many=False)
     return Response(serializer.data)
 
 
-class DeviceLogView(APIView):
+class DeviceLogAPIView(APIView):
     @staticmethod
     def get(request, device_id: int):
         start_date = request.GET.get('start_date')

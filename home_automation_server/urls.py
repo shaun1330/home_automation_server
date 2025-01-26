@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('devices/', include('internet_of_things.urls'))
+    path('api/devices/', include('internet_of_things.api_urls'))
 ]
