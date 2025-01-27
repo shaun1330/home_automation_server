@@ -1,0 +1,20 @@
+{% load custom_filters %}
+
+<table class="table table-sm">
+    <thead>
+        {% for field in log_fields %}
+            <th>{{ field.name|replace:"_, "|capitalize }}</th>
+        {% endfor %}
+        <th>Datetime</th>
+    </thead>
+    <tbody>
+    {% for log in logs %}
+        <tr>
+            {% for field in log_fields %}
+                <td>{{ log.log|dict_get:field.name }}</td>
+            {% endfor %}
+            <td>{{ log.log_datetime|date:"Y-m-d H:i:s" }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

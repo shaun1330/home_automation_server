@@ -4,9 +4,17 @@
 
 
 {% block content %}
-
-    <h2>Device:{{ device.name }} </h2>
-    <div><b>Location</b><p>{{ device.location }}</p></div>
-    <div><b>Device Type</b><p>{{ device.device_type }}</p></div>
-
+    <div class="row">
+        <h4>Device:{{ device.name }} </h4>
+        <div class="col">
+            <div class="d-block">
+                <b>Location</b><p>{{ device.location }}</p>
+                <b>Device Type</b><p>{{ device.device_type }}</p>
+            </div>
+            <div hx-get="/devices/{{ device.id }}/log" hx-trigger="load" hx-swap="innerHTML"></div>
+        </div>
+        <div class="col">
+        </div>
+    </div>
+    
 {% endblock %}

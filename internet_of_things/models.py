@@ -30,6 +30,7 @@ class DeviceLogField(models.Model):
     data_type = models.CharField(choices=LOG_DATA_TYPES, default="string", max_length=50)
     units = models.CharField(max_length=10, null=True, blank=True)
     device = models.ForeignKey(Device, on_delete=models.CASCADE)
+    sort_order = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.device.name} field - {self.name}"

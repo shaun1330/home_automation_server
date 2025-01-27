@@ -1,6 +1,6 @@
 import pytest
 from freezegun import freeze_time
-from internet_of_things.models import Device, DeviceLog
+from internet_of_things.models import Device, DeviceLog, DeviceLogField
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django.shortcuts import reverse
@@ -46,7 +46,7 @@ def test_post_device_log(api_client, create_devices):
         "location": "TEST",
         "foo": "bar"
     }
-    response = api_client.post('/api/devices/log/1', data=payload)
+    response = api_client.post('/api/devices/1/log', data=payload)
     assert response.status_code == 201
     expected = {'device': 1,
                 'id': 1,
@@ -91,6 +91,13 @@ def create_device_logs(create_devices):
         }
         DeviceLog.objects.create(device_id=1, log=log, log_datetime=d)
 
+@pytest.fixture()
+def create_device_log_fields(create_device_logs):
+    DeviceLogField.objects.create(name="foo", data_type="string", sort_order=0, units=None, device_id=1)
+    DeviceLogField.objects.create(name="temperature", data_type="float", sort_order=1, units="C", device_id=1)
+    DeviceLogField.objects.create(name="voltage", data_type="float", sort_order=0, units="V", device_id=1)
+
+
 @freeze_time('2025-01-01 01:00:00+11:00')
 @pytest.mark.parametrize('start_date, end_date, expected', [
     (None, None, expected_device_logs),
@@ -98,7 +105,7 @@ def create_device_logs(create_devices):
     (None, '2025-03-01', expected_device_logs[:3]),
 ])
 def test_get_device_logs_all(api_client, create_device_logs, start_date, end_date, expected):
-    url = '/api/devices/log/1?'
+    url = '/api/devices/1/log?'
     if start_date:
         url += f'start_date={start_date}&'
     if end_date:
@@ -106,7 +113,6 @@ def test_get_device_logs_all(api_client, create_device_logs, start_date, end_dat
     response = api_client.get(url)
     data = response.json()
     assert data == expected
-
 
 #################### HTML render tests ####################
 
@@ -121,6 +127,14 @@ def save_expected_output(filename, content):
     file_path = base_dir / filename
     with file_path.open("w", encoding="utf-8") as file:
         file.write(content)
+
+def test_home(client, create_devices):
+    url = reverse("home")
+    response = client.get(url, HTTP_HX_REQUEST="true")
+    assert response.status_code == 200
+    #save_expected_output('home.html', response.content.decode().strip())
+    expected = load_expected_html('home.html')
+    assert response.content.decode().strip() == expected.strip()
 
 def test_devices_list(client, create_devices):
     url = reverse("iot:devices_list")
@@ -138,10 +152,18 @@ def test_devices_list_no_devices(client, db):
     expected = load_expected_html('devices_list_no_devices.html')
     assert response.content.decode().strip() == expected.strip()
 
-def test_device_details(client, db, create_devices):
+def test_device_details(client, create_device_log_fields):
     url = reverse("iot:device_detail", args=[1])
     response = client.get(url)
     assert response.status_code == 200
     #save_expected_output('device_details.html', response.content.decode().strip())
     expected = load_expected_html('device_details.html')
+    assert response.content.decode().strip() == expected.strip()
+
+def test_device_logs(client, create_device_log_fields):
+    url = reverse("iot:device_logs", args=[1])
+    response = client.get(url)
+    assert response.status_code == 200
+    #save_expected_output('device_logs.html', response.content.decode().strip())
+    expected = load_expected_html('device_logs.html')
     assert response.content.decode().strip() == expected.strip()
