@@ -142,6 +142,6 @@ def test_device_details(client, db, create_devices):
     url = reverse("iot:device_detail", args=[1])
     response = client.get(url)
     assert response.status_code == 200
-    save_expected_output('device_details.html', response.content.decode().strip())
+    #save_expected_output('device_details.html', response.content.decode().strip())
     expected = load_expected_html('device_details.html')
     assert response.content.decode().strip() == expected.strip()
