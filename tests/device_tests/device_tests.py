@@ -1,6 +1,6 @@
 import pytest
 from freezegun import freeze_time
-from internet_of_things.models import Device, DeviceLog, DeviceLogField
+from internet_of_things.models import Device, DeviceLog, DeviceLogField, Tags
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django.shortcuts import reverse
@@ -167,3 +167,44 @@ def test_device_logs(client, create_device_log_fields):
     #save_expected_output('device_logs.html', response.content.decode().strip())
     expected = load_expected_html('device_logs.html')
     assert response.content.decode().strip() == expected.strip()
+
+@pytest.fixture()
+def create_tags(db):
+    tags = []
+    for i in range(3):
+        t = Tags.objects.create(name=f'Tag {i}')
+        tags.append(t)
+    yield
+    for t in tags:
+        t.delete()
+
+def test_create_device(client, create_tags):
+    url = reverse("iot:create_device")
+    payload = {
+        'name': "Hello",
+        'location': 'Test Location',
+        'device_type': 'Test Type',
+        'tags': [1, 2]
+    }
+    response = client.post(url, data=payload)
+    assert response.status_code == 302
+    device = Device.objects.last()
+    assert device.name == "Hello"
+    assert device.location == "Test Location"
+    assert device.device_type == "Test Type"
+    assert device.tags.count() == 2
+    assert device.tags.first().name == "Tag 0"
+    assert device.tags.last().name == "Tag 1"
+    assert response.url == reverse("home")
+
+def test_create_device_already_exists(client, create_devices, create_tags):
+    url = reverse("iot:create_device")
+    payload = {
+        'name': "Test 0",
+        'location': 'Test Location',
+        'device_type': 'Test Type',
+        'tags': [1, 2]
+    }
+    response = client.post(url, data=payload)
+    assert response.status_code == 400
+    assert response.context['form'].errors == {'name': ['Device with this name already exists.']}

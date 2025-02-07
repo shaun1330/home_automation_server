@@ -17,7 +17,7 @@ class Tags(models.Model):
 
 
 class Device(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     location = models.CharField(max_length=255, default=None, null=True, blank=True)
     device_type = models.CharField(max_length=255, default=None, null=True, blank=True)
     tags = models.ManyToManyField(Tags, default=None, blank=True)

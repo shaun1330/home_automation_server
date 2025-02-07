@@ -3,6 +3,7 @@
 {% block title %}Home Server{% endblock %}
 
 {% block content %}
+    <a href="{% url 'iot:create_device' %}" class="btn btn-primary">Create Device</a>
     <div class="row">
         <div class="col-6">
             <div hx-get="{% url 'iot:devices_list' %}" hx-swap="innerHTML" hx-trigger="load">

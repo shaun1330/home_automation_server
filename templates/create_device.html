@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <p>create device</p>
+    <form action="{% url 'iot:create_device' %}" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="deviceName" class="form-label">Device Name</label>
+            {{ form.name }}
+        </div>
+        <div class="mb-3">
+            <label for="deviceLocation" class="form-label">Location</label>
+            {{ form.location }}
+        </div>
+        <div class="mb-3">
+            <label for="deviceType" class="form-label">Device Type</label>
+            {{ form.device_type }}
+        </div>
+        <div class="mb-3">
+            <label for="deviceTags" class="form-label">Tags</label>
+            {{ form.tags }}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+{% endblock %}
