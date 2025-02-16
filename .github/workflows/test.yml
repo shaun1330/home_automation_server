@@ -7,6 +7,13 @@ on:
         branches: [main]
 jobs:
   test:
+    env:
+      SECRET_KEY: foo
+      DATABASE_HOST: localhost
+      MYSQL_USER: root # not actually used
+      MYSQL_PASSWORD: root # not actually used
+      MYSQL_NAME: test_db # not actually used
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
