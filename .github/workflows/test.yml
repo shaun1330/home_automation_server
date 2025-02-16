@@ -13,6 +13,7 @@ jobs:
       MYSQL_USER: root # not actually used
       MYSQL_PASSWORD: root # not actually used
       MYSQL_NAME: test_db # not actually used
+      TESTING: true
 
     runs-on: ubuntu-latest
     steps:
