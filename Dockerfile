@@ -27,7 +27,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 RUN python manage.py collectstatic --noinput
-RUN python manage.py migrate
 
 # Run gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "home_automation_server.wsgi:application"]
