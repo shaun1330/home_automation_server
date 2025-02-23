@@ -12,7 +12,7 @@ jobs:
       DATABASE_HOST: localhost
       MYSQL_USER: root # not actually used
       MYSQL_PASSWORD: root # not actually used
-      MYSQL_NAME: test_db # not actually used
+      MYSQL_DATABASE: test_db # not actually used
       TESTING: true
 
     runs-on: ubuntu-latest

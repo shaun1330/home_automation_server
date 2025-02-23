@@ -26,7 +26,7 @@ SECRET_KEY = env("SECRET_KEY", default="test-key")
 
 DEBUG = env.bool("DEBUG", default=False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.1.25']
 APPEND_SLASH = True
 
 # Application definition
@@ -87,7 +87,7 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': env("MYSQL_NAME"),
+            'NAME': env("MYSQL_DATABASE"),
             'USER': env("MYSQL_USER"),
             'PASSWORD': env("MYSQL_PASSWORD"),
             'HOST': env("MYSQL_HOST", default="localhost"),
