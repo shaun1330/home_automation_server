@@ -26,7 +26,7 @@ SECRET_KEY = env("SECRET_KEY", default="test-key")
 
 DEBUG = env.bool("DEBUG", default=False)
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.1.25']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.1.25', '192.168.1.19']
 APPEND_SLASH = True
 
 # Application definition
