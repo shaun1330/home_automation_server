@@ -9,7 +9,7 @@ LOG_DATA_TYPES = [
     ("bool", "Bool")
 ]
 
-class Tags(models.Model):
+class Tag(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
@@ -20,7 +20,7 @@ class Device(models.Model):
     name = models.CharField(max_length=255, unique=True)
     location = models.CharField(max_length=255, default=None, null=True, blank=True)
     device_type = models.CharField(max_length=255, default=None, null=True, blank=True)
-    tags = models.ManyToManyField(Tags, default=None, blank=True)
+    tags = models.ManyToManyField(Tag, default=None, blank=True)
 
     def __str__(self):
         return self.name

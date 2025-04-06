@@ -1,9 +1,5 @@
 from django import forms
-from internet_of_things.models import Tags
-
-
-from django import forms
-from internet_of_things.models import Tags
+from internet_of_things.models import Tag
 
 class DeviceForm(forms.Form):
     name = forms.CharField(
@@ -31,7 +27,7 @@ class DeviceForm(forms.Form):
         })
     )
     tags = forms.ModelMultipleChoiceField(
-        queryset=Tags.objects.all(),
+        queryset=Tag.objects.all(),
         to_field_name="id",
         widget=forms.SelectMultiple(attrs={
             'class': 'form-control',

@@ -1,4 +1,4 @@
-from internet_of_things.models import Device, DeviceLog, DeviceLogField, Tags
+from internet_of_things.models import Device, DeviceLog, DeviceLogField, Tag
 import json
 import datetime
 
@@ -25,7 +25,7 @@ def test_device_log_str(db):
     assert expected == output
 
 def test_tag_str(db):
-    tags = Tags.objects.create(name="TestTag")
+    tags = Tag.objects.create(name="TestTag")
     expected = "TestTag"
     output = str(tags)
     assert expected == output

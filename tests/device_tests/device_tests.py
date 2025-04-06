@@ -1,6 +1,6 @@
 import pytest
 from freezegun import freeze_time
-from internet_of_things.models import Device, DeviceLog, DeviceLogField, Tags
+from internet_of_things.models import Device, DeviceLog, DeviceLogField, Tag
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django.shortcuts import reverse
@@ -172,7 +172,7 @@ def test_device_logs(client, create_device_log_fields):
 def create_tags(db):
     tags = []
     for i in range(3):
-        t = Tags.objects.create(name=f'Tag {i}')
+        t = Tag.objects.create(name=f'Tag {i}')
         tags.append(t)
     yield
     for t in tags:
