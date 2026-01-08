@@ -39,6 +39,6 @@ trio-websocket==0.12.2
 types-PyYAML==6.0.12.20250402
 types-requests==2.32.0.20250328
 typing_extensions==4.12.2
-urllib3==2.3.0
+urllib3==2.6.3
 websocket-client==1.8.0
 wsproto==1.2.0
